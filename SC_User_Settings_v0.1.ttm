@@ -21,14 +21,14 @@
 
     //It is not recomened to change these setting
     int     JSDeadZone          = 5;                            //Joystick deadzone it is a percentage 0 to 100.
-    int     TSDeadZone          = 5;                            //Throttle deadzone for S Curve it is a percentage from 0 to 100.
+    short   TSDeadZone[]        = {5,7,5};                        //Throttle deadzone for S Curve it is a percentage from 0 to 100.
     int     FPDeadZone          = 10;                           //Foot pedal deadzone it is a percentage 0 to 100.
     
 //          Flap switch          Up,Mid,Dwn
     short   JSCurve[]           = {0,4,10};                     //{Flat,Progresive,Precision} Joystick S Curve must be between -32 and 32 as a whole number
     short   JSZoom[]            = {0,0,-2};                     //{Flat,Progresive,Precision} Joystick S Curve it is a percentage 0 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
     short   TSCurve[]           = {0,5,7};                      //{Flat,Progresive,Precision} Throttle S Curve array for for throttle between -32 and 32 integer
-    short   TSZoom[]            = {0,0,-3};                     //{Flat,Progresive,Precision} Throttle S Curve array for for throttle zoom integer -100 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
+    short   TSZoom[]            = {0,0,-2};                     //{Flat,Progresive,Precision} Throttle S Curve array for for throttle zoom integer -100 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
     short   FPCurve[]           = {0,10,10};                    //{Flat,Progresive,Precision}Foot pedal S Curve modes must be between -32 and 32 as a whole number
     short   FPZoom[]            = {0,0,-3};                     //{Flat,Progresive,Precision}Foot pedal S Curve modes it is a percentage 0 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
     

@@ -18,30 +18,7 @@ int initLEDClear(){//reset of LEDs to allow proper states to be displayed
     ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED4));
     ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED5));
 }
-    
-//External, Game and Prox Game comms switching
-int extComms(){
-        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT+LED1));
-        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED2));
-        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED3));
-        MapKey(&Throttle, MSP, Ext_Voice);
-        if(DebugOut) printf("External Comms Enabled \xa");
-    }
-int intProxComms(){
-        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED1));
-        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT+LED2));
-        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED3));
-        MapKey(&Throttle, MSP, Int_VoiceProx);
-        if(DebugOut) printf("Internal Proximity Comms Enabled \xa");
-    }
-int intComms(){
-        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED1));
-        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED2));
-        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT+LED3));
-        MapKey(&Throttle, MSP, Int_Voice);
-        if(DebugOut) printf("Internal Comms Enabled \xa");
-    }
-    
+
 int initShieldManagment(){//Shield Reinforcing
     if (Joystick[S3]){
         if (Joystick[H4U]) {ActKey(KEYON+PULSE+ShieldTop);}
@@ -64,15 +41,117 @@ int initDoorManagment(){//Full Open/Close and Lock Operation
     if (DLSet==2 & Joystick[S3]){ActKey(KEYON+PULSE+UnlockAllDr);}
 }
 
+//---------------------------------------------------------------------------
+//               External, Game and Prox Game comms switching
+//---------------------------------------------------------------------------
+int extComms(){
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT+LED1));
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED2));
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED3));
+    MapKey(&Throttle, MSP, Ext_Voice);
+    if(DebugOut) printf("External Comms Enabled \xa");
+}
+
+int intProxComms(){
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED1));
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT+LED2));
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED3));
+    MapKey(&Throttle, MSP, Int_VoiceProx);
+    if(DebugOut) printf("Internal Proximity Comms Enabled \xa");
+}
+
+int intComms(){
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED1));
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED2));
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT+LED3));
+    MapKey(&Throttle, MSP, Int_Voice);
+    if(DebugOut) printf("Internal Comms Enabled \xa");
+}
+
+//---------------------------------------------------------------------------
+//                      Throttle maping controls
+//---------------------------------------------------------------------------
+int RJCurveThrSet(int a){SetJCurve(&Throttle, THR_RIGHT, TJAct[a],TJOut[a]);}//Right throttle J curve hardware setup
+int RSCurveThrSet(int a){SetSCurve(&Throttle, THR_RIGHT, 0, TSDeadZone[a], 0, TSCurve[a], TSZoom[a]);}//Right throttle S curve hardware setup
+int RCCurveThrSet(int a){SetCustomCurve(&Throttle,THR_RIGHT,a);}//Right throttle custom curve hardware setup
+
+int LJCurveThrSet(int a){SetJCurve(&Throttle, THR_LEFT,  TJAct[a],TJOut[a]);}//Left throttle J curve hardware setup
+int LSCurveThrSet(int a){SetSCurve(&Throttle, THR_LEFT, 0, TSDeadZone[a], 0, TSCurve[a], TSZoom[a]);}//Left throttle S curve hardware setup
+int LCCurveThrSet(int a){SetCustomCurve(&Throttle,THR_LEFT,a);}//Left throttle custom curve hardware setup
+
+int JCurveSlideSet(int a){SetJCurve(&Throttle, THR_FC, TJAct[a],TJOut[a]);}//Friction slider S curve setup
+int SCurveSlideSet(int a){SetSCurve(&Throttle, THR_FC, 0, TSDeadZone[a], 0, TSCurve[a], TSZoom[a]);}//Friction slider S curve setup
+int LCCurveSlideSet(int a){SetCustomCurve(&Throttle,THR_FC,a);}//Friction slider custom curve setup
+
+int LeftCustCurve(int a,int b){//wraping for custom curves to follow the Right Throttle curves
+    if (LeftThrFollow){TrimDXAxis(DX_SLIDER_AXIS, SET(b));LCCurveThrSet(a);}
+    else {TrimDXAxis(DX_SLIDER_AXIS, SET(b));LSCurveThrSet(0);}
+}
+    
+int LeftFollowCurve(int a,int b,int c){//wraping for S andJ  curves to follow the Right Throttle curves
+    if (c==1){
+        if (LeftThrFollow){TrimDXAxis(DX_SLIDER_AXIS, SET(b));LSCurveThrSet(a);}
+        else{TrimDXAxis(DX_SLIDER_AXIS, SET(0));LSCurveThrSet(0);}
+    }
+    else if(c==0){
+        if (LeftThrFollow){TrimDXAxis(DX_SLIDER_AXIS, SET(b));LJCurveThrSet(a);}
+        else{TrimDXAxis(DX_SLIDER_AXIS, SET(0));LSCurveThrSet(0);}
+    }
+}
+
+int FricSliderCustCurve(int a,int b){//wraping for custom curves to follow the Right Throttle curves
+    if (SliderFollow){TrimDXAxis(DX_ZROT_AXIS, SET(b));LCCurveSlideSet(a);}
+    else{TrimDXAxis(DX_ZROT_AXIS, SET(0));SCurveSlideSet(0);}
+}
+
+int FricSliderFollowCurve(int a, int b,int c){//wraping for S andJ  curves to follow the Right Throttle curves
+    if (c){
+        if (SliderFollow){TrimDXAxis(DX_ZROT_AXIS, SET(b));SCurveSlideSet(a);}
+        else{TrimDXAxis(DX_ZROT_AXIS, SET(0));SCurveSlideSet(0);}
+    }
+    else if (!c){
+        if (SliderFollow){TrimDXAxis(DX_ZROT_AXIS, SET(b));JCurveSlideSet(a);}
+        else{TrimDXAxis(DX_ZROT_AXIS, SET(0));SCurveSlideSet(0);}
+    }
+}
+
 int initZeroIdle(){//ensure that on 'idle' stops/button throttle will be zero.
     if(Throttle[IDLERON]){
-        DXAxis(DX_THROTTLE_AXIS,0);//force axis to zero
-        DXAxis(DX_SLIDER_AXIS,0);
         LockAxis(&Throttle,THR_RIGHT,1);//lock out changes to axis value
         LockAxis(&Throttle,THR_LEFT,1);
+        if(Throttle[FLAPD]){
+            DXAxis(DX_THROTTLE_AXIS,0);//force axis to zero
+            DXAxis(DX_SLIDER_AXIS,0);}
+        if(Throttle[FLAPM]){
+            DXAxis(DX_THROTTLE_AXIS,0);//force axis to zero
+            DXAxis(DX_SLIDER_AXIS,0);}
+        if(Throttle[FLAPU]){
+            DXAxis(DX_THROTTLE_AXIS,32767);//force axis to zero
+            DXAxis(DX_SLIDER_AXIS,32767);}
     }
     if(!Throttle[IDLERON]){
         LockAxis(&Throttle,THR_RIGHT,0);//lock out changes to axis value
         LockAxis(&Throttle,THR_LEFT,0);
     }
+}
+
+int SetThrottle() { // Prevents Throttle jumping around on mode changes
+    DXAxis(DX_THROTTLE_AXIS, -AxisVal(Throttle[THR_RIGHT], &axdata));
+    DXAxis(DX_SLIDER_AXIS, -AxisVal(Throttle[THR_LEFT], &axdata));
+    DXAxis(DX_ZROT_AXIS, -AxisVal(Throttle[THR_FC], &axdata));
+}
+
+//---------------------------------------------------------------------------
+//                      Joystick maping controls
+//---------------------------------------------------------------------------
+int setFootAxisSCurve(int a){SetSCurve(&TFRPRudder,TRUDDER,0,FPDeadZone,0,FPCurve[a],FPZoom[a]);}//TRP Footpedal Curves
+
+int FootSCurve(int a){//wraping for custom curves to follow the Right Throttle curves
+    if (FootFollowJoy){setFootAxisSCurve(a);}
+    else {setFootAxisSCurve(0);}
+}
+
+int JoyAxisCurveSet(int a){ //Warthog Joystick Curves
+    SetSCurve(&Joystick, JOYX, 0,JSDeadZone,0,(JSCurve[a]),JSZoom[a]);
+    SetSCurve(&Joystick, JOYY, 0,JSDeadZone,0,(JSCurve[a]),JSZoom[a]);
 }

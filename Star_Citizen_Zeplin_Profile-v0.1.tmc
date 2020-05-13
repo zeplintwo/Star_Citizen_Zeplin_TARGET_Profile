@@ -46,19 +46,8 @@ int main()
     initThrottleMapAxis();
     setJoystickCurves();
     setThrottleCurves();
-    nitZeroIdle();
     warthogJoyBinds();
 	warthogThrottleBinds();
-	
-	//Joystick Curve Selection 3 profles in order Flat,Progresive,Precision
-	MapKey(&Throttle,APPAT,   EXEC("ActKey(KEYON+PULSE+APPathUp);"));
-    MapKey(&Throttle,APAH,    EXEC("ActKey(KEYON+PULSE+APAltHdgMid);"));
-    MapKey(&Throttle,APALT,   EXEC("ActKey(KEYON+PULSE+APAltDown);"));
-	
-	//Right throttle curve settings 3 profles in order Flat,Progresive,Precision
-    MapKey(&Throttle, FLAPU,  EXEC("if (!Throttle[IDLERON]) ActKey(KEYON+PULSE+FlapThrUp);"));     // Flaps UP throttle mode
-	MapKey(&Throttle, FLAPM,  EXEC("if (!Throttle[IDLERON]) ActKey(KEYON+PULSE+FlapThrMid);"));    // Flaps MIDDLE throttle mode
-	MapKey(&Throttle, FLAPD,  EXEC("if (!Throttle[IDLERON]) ActKey(KEYON+PULSE+FlapThrDown);"));   // Flaps DOWN throttle mode
 	
 }
 
