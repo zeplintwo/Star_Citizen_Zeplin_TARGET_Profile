@@ -1,0 +1,71 @@
+// Part of Star_Citizen_Zeplin_Profile#.# keybinds packages
+//---------------------------------------------------------------------------
+//
+// Star Citizen scripts from Zeplin for Warthog HOTAS from Thrustmaster
+//
+// Master Branch on GetHub: https://github.com/zeplintwo/Star_Citizen_Zeplin_TARGET_Profile
+//
+//      Scripts and codes are inspired from ED and other sources. Aussiedroid has heavly influnced my coding for these scripts. 
+//
+//      Please report any bugs, features or suggestion to above script branch.
+//
+//      This is a WIP there will be issues.
+//
+//  Use SC_User-Setting-v#.#.ttm to adjust user preferances.
+//
+//      Script is built on the basis of a default SC keybinds in v 3.9
+//
+//  Use SC_Key_Defines-v#.#.ttm to adjust any changes to keybinds for script to function properly. I will try to keep up with changes as needed.
+//
+//---------------------------------------------------------------------------
+include "target_zeplin_dx128-v0.1.tmh"          //modded target.tmh file so that it looks diffrent from stock
+include "SC_Key_Defines-v0.1.ttm"               //Key defines for SC to TARGET scripting including the 128 DX Buttons for future usage
+include "SC_Hardware-v0.1.ttm"                  //Hardware setup for the script
+include "SC_User_Settings_v0.1.ttm"             //User editable setting for the script
+include "SC_Functions-v0.1.ttm"                 //Function for the script
+
+int AxisCurveProg,AxisCurvePrecision;           //custom throttle list declares
+
+//program startup
+int main()
+{
+    setExclusion();//block other Thrustmaster products
+    
+	if(Init(&EventHandle)) return 1; // declare the event handler, return on error
+    SetKBRate(PulseLength, DelayLength);
+	SetKBLayout(KB_ENG);
+	//curve profiles for throttle single direction modes
+	AxisCurveProg = LIST(0,0, 35,25, 70,50, 80,75, 100,100);
+	AxisCurvePrecision = LIST(0,0, 25,10, 35,15, 45,20, 55,25, 65,30, 75,35, 100,40);
+	
+	//add initialization code here
+    //Main code calls
+    initLEDClear();
+    initJoyMapAxis();
+    initFootMapAxis();
+    initThrottleMapAxis();
+    setJoystickCurves();
+    setThrottleCurves();
+    nitZeroIdle();
+    warthogJoyBinds();
+	warthogThrottleBinds();
+	
+	//Joystick Curve Selection 3 profles in order Flat,Progresive,Precision
+	MapKey(&Throttle,APPAT,   EXEC("ActKey(KEYON+PULSE+APPathUp);"));
+    MapKey(&Throttle,APAH,    EXEC("ActKey(KEYON+PULSE+APAltHdgMid);"));
+    MapKey(&Throttle,APALT,   EXEC("ActKey(KEYON+PULSE+APAltDown);"));
+	
+	//Right throttle curve settings 3 profles in order Flat,Progresive,Precision
+    MapKey(&Throttle, FLAPU,  EXEC("if (!Throttle[IDLERON]) ActKey(KEYON+PULSE+FlapThrUp);"));     // Flaps UP throttle mode
+	MapKey(&Throttle, FLAPM,  EXEC("if (!Throttle[IDLERON]) ActKey(KEYON+PULSE+FlapThrMid);"));    // Flaps MIDDLE throttle mode
+	MapKey(&Throttle, FLAPD,  EXEC("if (!Throttle[IDLERON]) ActKey(KEYON+PULSE+FlapThrDown);"));   // Flaps DOWN throttle mode
+	
+}
+
+//event handler
+int EventHandle(int type, alias o, int x)
+{
+    DefaultMapping(&o, x);
+	//add event handling code here
+    initShieldManagment();    
+}

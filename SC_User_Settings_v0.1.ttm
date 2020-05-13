@@ -1,0 +1,45 @@
+// Part of Star_Citizen_Zeplin_Profile#.# keybinds packages
+//---------------------------------------------------------------------------
+//                      User Configuration Settings 
+//---------------------------------------------------------------------------
+// Setting below us binary 0/1 to control setting.
+//
+// Changeing from defaults are SHOULD NOT cause unintended results
+//---------------------------------------------------------------------------
+// Ingame axis toggle follow for several controls
+   
+    int     FootFollowJoy       = 1;        //Default 1     // set FootFollowJoy to 1 for to follow Joystick profile or 0 to stay on initial JSProfile
+    
+    int     LeftThrFollow       = 1;        //Default 1     // set LeftThrFollow to 1 to use the same maping changes to its axis from flap controls set to 0 for one to one control
+    
+    int     SliderFollow        = 0;        //Default 0     // set SliderFollow to 1 to follow the same maping changes to its axis from flap controls leave 0 to have one to one control
+    
+    int     FootPedal           = 1;        //Default 1     // set FootPedal to 1 for usage of the yaw axis to control ingame yaw motion. Set 0 to have the dual 'throttle' pedals to control yaw independently
+
+//---------------------------------------------------------------------------
+//----------------------Joystick and Throttle Curve Arrays-------------------
+
+    //It is not recomened to change these setting
+    int     JSDeadZone          = 5;                            //Joystick deadzone it is a percentage 0 to 100.
+    int     TSDeadZone          = 5;                            //Throttle deadzone for S Curve it is a percentage from 0 to 100.
+    int     FPDeadZone          = 10;                           //Foot pedal deadzone it is a percentage 0 to 100.
+    
+//          Flap switch          Up,Mid,Dwn
+    short   JSCurve[]           = {0,4,10};                     //{Flat,Progresive,Precision} Joystick S Curve must be between -32 and 32 as a whole number
+    short   JSZoom[]            = {0,0,-2};                     //{Flat,Progresive,Precision} Joystick S Curve it is a percentage 0 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
+    short   TSCurve[]           = {0,5,7};                      //{Flat,Progresive,Precision} Throttle S Curve array for for throttle between -32 and 32 integer
+    short   TSZoom[]            = {0,0,-3};                     //{Flat,Progresive,Precision} Throttle S Curve array for for throttle zoom integer -100 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
+    short   FPCurve[]           = {0,10,10};                    //{Flat,Progresive,Precision}Foot pedal S Curve modes must be between -32 and 32 as a whole number
+    short   FPZoom[]            = {0,0,-3};                     //{Flat,Progresive,Precision}Foot pedal S Curve modes it is a percentage 0 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
+    
+    short   TJAct[]             = {50,0};                       //{Flat,Null} Array for throttle J curve
+    short   TJOut[]             = {50,0};                       //{Flat,Null} Array for throttle J curve
+
+//---------------------------------------------------------------------------
+
+    int Gear                = 1;                            //assumes ship landed
+    int DLSet               = 0;                            //Door and lock desion signal
+    
+    int SetForwardThrOnly,SetForeNonLinThr,SetThrPrecison,SetDualFlat,SetDualProg,SetDualPerc,SetFlat,SetProg,SetPrec;//Throttle declaration modes
+    
+//---------------------------------------------------------------------------

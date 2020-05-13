@@ -1,0 +1,78 @@
+// Part of Star_Citizen_Zeplin_Profile#.# keybinds packages
+//---------------------------------------------------------------------------
+//                      Multi-Function Scripts
+//---------------------------------------------------------------------------
+int setExclusion(){//following lines turn off other thrustmaster devices
+    Configure(&HCougar, MODE_EXCLUDED);
+    Configure(&JoystickF18, MODE_EXCLUDED);
+	Configure(&LMFD, MODE_EXCLUDED);
+	Configure(&RMFD, MODE_EXCLUDED);
+	Configure(&TWCSThrottle, MODE_EXCLUDED);
+    Configure(&T16000, MODE_EXCLUDED);	
+}
+
+int initLEDClear(){//reset of LEDs to allow proper states to be displayed
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED1));
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED2));
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED3));
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED4));
+    ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED5));
+}
+    
+//External, Game and Prox Game comms switching
+int extComms(){
+        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT+LED1));
+        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED2));
+        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED3));
+        MapKey(&Throttle, MSP, Ext_Voice);
+        if(DebugOut) printf("External Comms Enabled \xa");
+    }
+int intProxComms(){
+        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED1));
+        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT+LED2));
+        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED3));
+        MapKey(&Throttle, MSP, Int_VoiceProx);
+        if(DebugOut) printf("Internal Proximity Comms Enabled \xa");
+    }
+int intComms(){
+        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED1));
+        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED2));
+        ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT+LED3));
+        MapKey(&Throttle, MSP, Int_Voice);
+        if(DebugOut) printf("Internal Comms Enabled \xa");
+    }
+    
+int initShieldManagment(){//Shield Reinforcing
+    if (Joystick[S3]){
+        if (Joystick[H4U]) {ActKey(KEYON+PULSE+ShieldTop);}
+        if (Joystick[H4D]) {ActKey(KEYON+PULSE+ShieldBottom);}
+        if (Joystick[H4P]) {ActKey(KEYON+PULSE+ShieldReset);}
+    }
+    else {
+        if (Joystick[H4U]) {ActKey(KEYON+PULSE+ShieldFore);}
+        if (Joystick[H4D]) {ActKey(KEYON+PULSE+ShieldAft);}
+        if (Joystick[H4L]) {ActKey(KEYON+PULSE+ShieldLeft);}
+        if (Joystick[H4R]) {ActKey(KEYON+PULSE+ShieldRight);}
+        if (Joystick[H4P]) {ActKey(KEYON+PULSE+ShieldReset);}
+    }
+}
+
+int initDoorManagment(){//Full Open/Close and Lock Operation
+    if (DLSet==1 & !Joystick[S3]){ActKey(KEYON+PULSE+CloseAllDr);}
+    if (DLSet==2 & !Joystick[S3]){ActKey(KEYON+PULSE+OpenAllDr);}
+    if (DLSet==1 & Joystick[S3]){ActKey(KEYON+PULSE+LockAllDr);}
+    if (DLSet==2 & Joystick[S3]){ActKey(KEYON+PULSE+UnlockAllDr);}
+}
+
+int initZeroIdle(){//ensure that on 'idle' stops/button throttle will be zero.
+    if(Throttle[IDLERON]){
+        DXAxis(DX_THROTTLE_AXIS,0);//force axis to zero
+        DXAxis(DX_SLIDER_AXIS,0);
+        LockAxis(&Throttle,THR_RIGHT,1);//lock out changes to axis value
+        LockAxis(&Throttle,THR_LEFT,1);
+    }
+    if(!Throttle[IDLERON]){
+        LockAxis(&Throttle,THR_RIGHT,0);//lock out changes to axis value
+        LockAxis(&Throttle,THR_LEFT,0);
+    }
+}

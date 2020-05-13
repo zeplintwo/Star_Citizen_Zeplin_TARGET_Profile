@@ -1,0 +1,268 @@
+// Part of Star_Citizen_Zeplin_Profile#.# keybinds packages
+//---------------------------------------------------------------------------
+//                      
+//---------------------------------------------------------------------------
+//---------------------------Full Debug Output-------------------------------
+
+define  DebugOut            1
+
+//---------------------------------------------------------------------------
+//---------------------------Throttle Switchable Maps------------------------
+
+define  FlapThrUp           SetForwardThrOnly
+define  FlapThrMid          SetForeNonLinThr
+define  FlapThrDown         SetDualPerc
+
+define  APPathUp            SetFlat
+define  APAltHdgMid         SetProg
+define  APAltDown           SetPrec
+
+//---------------------------------------------------------------------------
+//---------------------------Delay Timers for TEMPO Binds--------------------
+
+define  DShort              300                         //Normal lenght delay sugested 300ms (default is 300)
+define  DLong               500                         //Long lenght delay sugested 500ms (default is 500)
+
+//---------------------------------------------------------------------------
+//---------------------------'Default' Delays for Script---------------------
+
+define  PulseLength         25                          //Length of a pulse command in ms (default is 25)
+define  DelayLength         33                          //Length of a normal d() delay in ms (default is 33)
+
+//---------------------------------------------------------------------------
+//---------------------------External Voice PTT Key-__-----------------------
+//  The section can be changed but results COULD CAUSE UNINDTENDED RESULTS. It is recomended to leave it as it is and add and extra PTT key in the VoIP software. 
+
+define Ext_Voice            USB[0x48]       //default is pause/break 'USB[0x48]' to activate external voice comms such as Discord/TeamSpeak. 
+
+//---------------------------------------------------------------------------
+int initJoyMapAxis(){//Map Axis DX Values
+    //Joystick
+    MapAxis(&Joystick, JOYX, DX_X_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);     
+    MapAxis(&Joystick, JOYY, DX_Y_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);  
+}
+int initFootMapAxis(){
+    //FootPeadls
+    MapAxis(&TFRPRudder, TRUDDER, DX_Z_AXIS,AXIS_NORMAL,MAP_ABSOLUTE);
+    MapAxis(&TFRPRudder, TRPLEFT, DX_XROT_AXIS,AXIS_NORMAL,MAP_ABSOLUTE);
+    MapAxis(&TFRPRudder, TRPRIGHT, DX_YROT_AXIS,AXIS_NORMAL,MAP_ABSOLUTE);    
+}
+
+int initThrottleMapAxis(){
+    //Throttle
+    //MapAxis(&Throttle, SCX, 0, AXIS_NORMAL, MAP_ABSOLUTE);
+    //MapAxis(&Throttle, SCY, 0, AXIS_NORMAL, MAP_ABSOLUTE);
+    MapAxis(&Throttle, THR_RIGHT, DX_THROTTLE_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);
+    MapAxis(&Throttle, THR_LEFT, DX_SLIDER_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);
+    MapAxis(&Throttle, THR_FC, DX_ZROT_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);
+}
+
+int startThrottleProfMap(){
+    if(DebugOut) {printf("Starting Axis configuration...\xa");}
+    if (Throttle[FLAPU]) ActKey(KEYON+PULSE+FlapThrUp);
+    else if (Throttle[FLAPM]) ActKey(KEYON+PULSE+FlapThrMid);
+    else ActKey(KEYON+PULSE+FlapThrDown);
+}
+
+int startJoyProfMap(){
+    if(DebugOut) {printf("Starting Axis configuration...\xa");}
+    if(Throttle[APPAT])ActKey(KEYON+PULSE+APPathUp);
+    else if(Throttle[APAH])ActKey(KEYON+PULSE+APAltHdgMid);
+    else ActKey(KEYON+PULSE+APAAltDown);
+}
+
+int JoyAxisCurveSet(int a){ //Warthog Joystick Curves
+    SetSCurve(&Joystick, JOYX, 0,JSDeadZone,0,(JSCurve[a]),JSZoom[a]);
+    SetSCurve(&Joystick, JOYY, 0,JSDeadZone,0,(JSCurve[a]),JSZoom[a]);
+}
+    
+int setJoystickCurves(){//Joystick and foot curve setting
+    SetFlat = EXEC("JoyAxisCurveSet(0);""if (FootFollowJoy==1){SetFootAxisCurve(0);}");
+    SetProg = EXEC("JoyAxisCurveSet(1);""if (FootFollowJoy==1){SetFootAxisCurve(1);}else{SetFootAxisCurve(0);}");
+    SetPrec = EXEC("JoyAxisCurveSet(2);""if (FootFollowJoy==1){SetFootAxisCurve(2);}else{SetFootAxisCurve(0);}");
+}
+
+int SetFootAxisCurve(int a){SetSCurve(&TFRPRudder, TRUDDER,0,JSDeadZone,0,FPCurve[a],FPZoom[a]);}//TRP Footpedal Curves
+
+int SetThrottle() { // Prevents Throttle jumping around on mode changes
+    DXAxis(DX_THROTTLE_AXIS, -AxisVal(Throttle[THR_RIGHT], &axdata));
+    DXAxis(DX_SLIDER_AXIS, -AxisVal(Throttle[THR_LEFT], &axdata));
+    DXAxis(DX_ZROT_AXIS, -AxisVal(Throttle[THR_FC], &axdata));
+}
+
+int RJCurveThrSet(int a){SetJCurve(&Throttle, THR_RIGHT, TJAct[a],TJOut[a]);}//Right throttle J curve hardware setup
+int RSCurveThrSet(int a){SetSCurve(&Throttle, THR_RIGHT, 0, TSDeadZone, 0, TSCurve[a], TSZoom[a]);}//Right throttle S curve hardware setup
+int RCCurveThrSet(int a){SetCustomCurve(&Throttle,THR_RIGHT,a);}
+
+int setThrottleCurves(){
+    //single direction throttle modes in one axis REQUIRES reverse/forward 'toggle'
+    SetForwardThrOnly = EXEC("TrimDXAxis(DX_THROTTLE_AXIS, SET(-1024));" // Flat
+                            "RJCurveThrSet(0);"
+                            "LeftFollowCurve(0,-1024,0);"
+                            "FricSliderFollowCurve(0,-1024,0);"
+                            "if(DebugOut) printf(\"Throttle Profile: FORWARD ONLY [0 -> 100] \\x0a \");"
+                            "SetThrottle();");
+    SetForeNonLinThr = EXEC("TrimDXAxis(DX_THROTTLE_AXIS, SET(-1024));" //Progresive
+                            "RCCurveThrSet(AxisCurveProg);"
+                            "LeftCustCurve(AxisCurveProg,-1024);"
+                            "FricSliderCustCurve(AxisCurveProg,-1024);"
+                            "if(DebugOut) printf(\"Throttle Profile: Progressive Forward Only [0 -> 100] \\x0a \");"
+                            "SetThrottle();");
+    SetThrPrecison = EXEC("TrimDXAxis(DX_THROTTLE_AXIS, SET(-1024));" //Percision
+                            "LeftCustCurve(AxisCurvePrecision,-1024);"
+                            "FricSliderCustCurve(AxisCurvePrecision,-1024);"
+                            "if(DebugOut) printf(\"Throttle Profile: Percision Forward Only [0 -> 40] \\x0a \");"
+                            "SetThrottle();");
+    //Dual forward/reverse mode in one axis DOES NOT require reverse/forward 'toggle'
+    SetDualFlat = EXEC("TrimDXAxis(DX_THROTTLE_AXIS, SET(0));" //Flat
+                            "RSCurveThrSet(0);"
+                            "LeftFollowCurve(0,0,1);"
+                            "FricSliderFollowCurve(0,0,1);"
+                            "if(DebugOut) printf(\"Throttle Profile: Forward/Reverse [-100 -> 100] \\x0a \");"
+                            "SetThrottle();");
+    SetDualProg = EXEC("TrimDXAxis(DX_THROTTLE_AXIS, SET(0));" //Progresive
+                            "RSCurveThrSet(1);"
+                            "LeftFollowCurve(1,0,1);"
+                            "FricSliderFollowCurve(1,0,1);"
+                            "if(DebugOut) printf(\"Throttle Profile: Progresive Forward/Reverse [-100 -> 100] \\x0a \");"
+                            "SetThrottle();");
+    SetDualPerc = EXEC("TrimDXAxis(DX_THROTTLE_AXIS, SET(0));" //Percision
+                            "RSCurveThrSet(2);"
+                            "LeftFollowCurve(2,0,1);"
+                            "FricSliderFollowCurve(2,0,1);"
+                            "if(DebugOut) printf(\"Throttle Profile: Percision Forward/Reverse [-50 -> 50] \\x0a \");"
+                            "SetThrottle();");
+}
+
+int LJCurveThrSet(int a){SetJCurve(&Throttle, THR_LEFT,  TJAct[a],TJOut[a]);}//Left throttle J curve hardware setup
+int LSCurveThrSet(int a){SetSCurve(&Throttle, THR_LEFT, 0, TSDeadZone, 0, TSCurve[a], TSZoom[a]);}//Left throttle S curve hardware setup
+int LCCurveThrSet(int a){SetCustomCurve(&Throttle,THR_LEFT,a);}//Left throttle custom curve hardware setup
+
+int JCurveSlideSet(int a){SetJCurve(&Throttle, THR_FC, TJAct[a],TJOut[a]);}//Friction slider S curve setup
+int SCurveSlideSet(int a){SetSCurve(&Throttle, THR_FC, 0, TSDeadZone, 0, TSCurve[a], TSZoom[a]);}//Friction slider S curve setup
+int LCCurveSlideSet(int a){SetCustomCurve(&Throttle,THR_FC,a);}//Friction slider custom curve setup
+
+int LeftCustCurve(int a,int b){//wraping for custom curves to follow the Right Throttle curves
+    if (LeftThrFollow){TrimDXAxis(DX_SLIDER_AXIS, SET(b));LCCurveThrSet(a);}
+    else {TrimDXAxis(DX_SLIDER_AXIS, SET(b));LSCurveThrSet(0);}
+}
+    
+int LeftFollowCurve(int a,int b,int c){//wraping for S andJ  curves to follow the Right Throttle curves
+    if (c==1){
+        if (LeftThrFollow){TrimDXAxis(DX_SLIDER_AXIS, SET(b));LSCurveThrSet(a);}
+        else{TrimDXAxis(DX_SLIDER_AXIS, SET(0));LSCurveThrSet(0);}
+    }
+    else if(c==0){
+        if (LeftThrFollow){TrimDXAxis(DX_SLIDER_AXIS, SET(b));LJCurveThrSet(a);}
+        else{TrimDXAxis(DX_SLIDER_AXIS, SET(0));LSCurveThrSet(0);}
+    }
+}
+
+int FricSliderCustCurve(int a,int b){//wraping for custom curves to follow the Right Throttle curves
+    if (SliderFollow){TrimDXAxis(DX_ZROT_AXIS, SET(b));LCCurveSlideSet(a);}
+    else{TrimDXAxis(DX_ZROT_AXIS, SET(0));SCurveSlideSet(0);}
+}
+
+int FricSliderFollowCurve(int a, int b,int c){//wraping for S andJ  curves to follow the Right Throttle curves
+    if (c){
+        if (SliderFollow){TrimDXAxis(DX_ZROT_AXIS, SET(b));SCurveSlideSet(a);}
+        else{TrimDXAxis(DX_ZROT_AXIS, SET(0));SCurveSlideSet(0);}
+    }
+    else if (!c){
+        if (SliderFollow){TrimDXAxis(DX_ZROT_AXIS, SET(b));JCurveSlideSet(a);}
+        else{TrimDXAxis(DX_ZROT_AXIS, SET(0));SCurveSlideSet(0);}
+    }
+}
+
+int warthogJoyBinds(){//Keybindings for the Warthog Joysick key assignments.
+    //Main Fire group 1 half group 1+2 full
+    MapKey(&Joystick,TG1,FireHalf);
+    MapKey(&Joystick,TG2,FireFull);
+    
+    //Missles and Counter meastures
+    MapKey(&Joystick,S1,TEMPO(PULSE+CycleCounter,PULSE+LaunchCounter,DLong));
+    MapKey(&Joystick,S2,TEMPO(PULSE+MissleLock,MissleLock,DLong));
+    
+    //Targeting Binds
+    MapKey(&Joystick,H2U,TEMPO(PULSE+TargetRegticle,PULSE+TargetFCycle,DLong*2));
+    MapKey(&Joystick,H2D,FireFull); // allows direct access to fire group 2
+    MapKey(&Joystick,H2L,TEMPO(PULSE+TargetECycle,PULSE+TargetECycleR,DShort));
+    MapKey(&Joystick,H2R,PULSE+TargetRelease);
+    
+    //Power Distrbution
+    MapKey(&Joystick,H3U,PULSE+PReset);
+    MapKey(&Joystick,H3D,PULSE+PThrust);
+    MapKey(&Joystick,H3L,PULSE+PWeapons);
+    MapKey(&Joystick,H3R,PULSE+PShields);
+
+    MapKey(&Joystick,H1U,TEMPO(ScanMode,ScanFire,DShort));
+    MapKey(&Joystick,H1D,PULSE+ExitSeat);
+    MapKey(&Joystick,H1L,PULSE+GimbalStab);
+    MapKey(&Joystick,H1R,PULSE+GimbalMode);
+    
+    //open functions
+    //MapKey(&Joystick,S3,0);  ****************Reserved shift function
+    //MapKey(&Joystick,S4,0);  ****************Reserved shift function
+}//end Joystick Bindings
+    
+int warthogThrottleBinds(){//Keybindings for the Warthog Throttle key assignments.
+    //head tracking 
+    MapKey(&Throttle,EOLIGN,TEMPO(PULSE+HeadTrack,PULSE+HeadCal,DLong));
+        
+    //Light and Gear
+    MapKey(&Throttle,EACON,PULSE+LandingGear);
+    MapKeyR(&Throttle,EACON,PULSE+LandingGear);
+    MapKey(&Throttle,APUON,PULSE+Lights);
+    MapKeyR(&Throttle,APUON,PULSE+Lights);
+    
+    //Thrusters flight control
+    MapKey(&Throttle,CSU,ThrustUp);
+    MapKey(&Throttle,CSD,ThrustDown);
+    MapKey(&Throttle,CSL,ThrustLeft);
+    MapKey(&Throttle,CSR,ThrustRight);
+    
+    //system map and Mobiglas
+    MapKey(&Throttle,BSF,PULSE+SystemMap);
+    MapKeyR(&Throttle,BSF,PULSE+SystemMap);
+    MapKey(&Throttle,BSB,PULSE+Mobiglas);
+    MapKeyR(&Throttle,BSB,PULSE+Mobiglas);
+    
+    //decouple flight set binds as non-toggle
+    MapKey(&Throttle,SPDF,Decouple);
+    MapKey(&Throttle,SPDM,0);
+    MapKey(&Throttle,SPDB,Decouple);
+    
+    //General Flight readyness
+    MapKey(&Throttle,LDGH,VTOL);
+    MapKey(&Throttle,SC,Afterburner);
+    MapKey(&Throttle,LTB,Brakes);
+    
+    //Power Control
+    MapKey(&Throttle,RDRNRM,PULSE+FlighReady);
+    MapKey(&Throttle,RDRDIS,PULSE+PowerAll);
+    
+    //Throttle mods and Quantum jump
+    MapKey(&Throttle,CHF,TEMPO(PULSE+QJump,QJump,DShort));
+    MapKey(&Throttle,CHB,TEMPO(0,ThrottleReverse,DShort));
+    //door control call
+	MapKey(&Throttle, APENG, TEMPO(EXEC("DLSet = 1;" "initDoorManagment();"),EXEC("DLSet = 2;" "initDoorManagment();"),DLong));
+	
+	//voice comms
+	MapKey(&Throttle,PSF,EXEC("extComms();"));
+	MapKey(&Throttle,PSM,EXEC("intProxComms();"));
+	MapKey(&Throttle,PSB,EXEC("intComms();"));	
+	
+    //open functions	
+    //MapKey(&Throttle,MSP,0);      ****************Rserved Voice Comm PTT
+    //MapKey(&Throttle, APDIS, 0);  ****************Reserved for door managment
+    MapKey(&Throttle,EFLNORM,0);
+    MapKey(&Throttle,EFLOVER,0);
+    MapKey(&Throttle,EORIGN,0);
+    MapKey(&Throttle,EFRNORM,0);
+    MapKey(&Throttle,EFROVER,0);
+    MapKey(&Throttle,APUOFF,0);
+    MapKey(&Throttle,MSR,0);
+    MapKey(&Throttle,MSL,0);
+    MapKey(&Throttle,EORMOTOR,0);
+    MapKey(&Throttle,EOLMOTOR,0);
+}
