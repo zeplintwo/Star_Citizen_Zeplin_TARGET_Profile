@@ -47,8 +47,7 @@ int main()
     setJoystickCurves();
     setThrottleCurves();
     warthogJoyBinds();
-	warthogThrottleBinds();
-	
+	warthogThrottleBinds();	
 }
 
 //event handler
@@ -56,5 +55,6 @@ int EventHandle(int type, alias o, int x)
 {
     DefaultMapping(&o, x);
 	//add event handling code here
-    initShieldManagment();    
+    initShieldManagment();
+    initScanViewHAT();    
 }

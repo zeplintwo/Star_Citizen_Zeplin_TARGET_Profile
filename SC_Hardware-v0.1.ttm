@@ -138,10 +138,7 @@ int warthogJoyBinds(){//Keybindings for the Warthog Joysick key assignments.
     MapKey(&Joystick,H3L,PULSE+PWeapons);
     MapKey(&Joystick,H3R,PULSE+PShields);
 
-    MapKey(&Joystick,H1U,TEMPO(ScanMode,ScanFire,DShort));
-    MapKey(&Joystick,H1D,PULSE+ExitSeat);
-    MapKey(&Joystick,H1L,PULSE+GimbalStab);
-    MapKey(&Joystick,H1R,PULSE+GimbalMode);
+
     
     //open functions
     //MapKey(&Joystick,S3,0);  ****************Reserved shift function
@@ -196,6 +193,9 @@ int warthogThrottleBinds(){//Keybindings for the Warthog Throttle key assignment
 	MapKey(&Throttle,PSM,EXEC("intProxComms();"));
 	MapKey(&Throttle,PSB,EXEC("intComms();"));	
 	
+	//mining calls
+	MapKey(&Throttle,EORIGN,TEMPO(MineFracHarv,MineMode,DLong));
+	
 	//Joystick Curve Selection 3 profles in order Flat,Progresive,Precision
 	MapKey(&Throttle,APPAT,   EXEC("ActKey(KEYON+PULSE+APPathUp);"));
     MapKey(&Throttle,APAH,    EXEC("ActKey(KEYON+PULSE+APAltHdgMid);"));
@@ -215,7 +215,6 @@ int warthogThrottleBinds(){//Keybindings for the Warthog Throttle key assignment
     //MapKey(&Throttle, APDIS, 0);  ****************Reserved for door managment
     MapKey(&Throttle,EFLNORM,0);
     MapKey(&Throttle,EFLOVER,0);
-    MapKey(&Throttle,EORIGN,0);
     MapKey(&Throttle,EFRNORM,0);
     MapKey(&Throttle,EFROVER,0);
     MapKey(&Throttle,APUOFF,0);

@@ -34,6 +34,21 @@ int initShieldManagment(){//Shield Reinforcing
     }
 }
 
+int initScanViewHAT(){
+    if (Joystick[S3]){
+        if (Joystick[H1U] & Joystick[S3]){ActKey(KEYON+PULSE+DownLook);}
+        if (Joystick[H1D] & Joystick[S3]){ActKey(KEYON+PULSE+RearLook);}
+        if (Joystick[H1L] & Joystick[S3]){ActKey(KEYON+PULSE+LeftLook);}
+        if (Joystick[H1R] & Joystick[S3]){ActKey(KEYON+PULSE+RightLook);}
+    }
+    else {
+        if (Joystick[H1U] & !Joystick[S3]){ActKey(TEMPO(ScanMode,ScanFire,DShort));}
+        if (Joystick[H1D] & !Joystick[S3]){ActKey(KEYON+PULSE+ExitSeat);}
+        if (Joystick[H1L] & !Joystick[S3]){ActKey(PULSE+GimbalStab);}
+        if (Joystick[H1R] & !Joystick[S3]){ActKey(PULSE+GimbalMode);}
+    }
+}
+
 int initDoorManagment(){//Full Open/Close and Lock Operation
     if (DLSet==1 & !Joystick[S3]){ActKey(KEYON+PULSE+CloseAllDr);}
     if (DLSet==2 & !Joystick[S3]){ActKey(KEYON+PULSE+OpenAllDr);}

@@ -21,7 +21,7 @@
 
     //It is not recomened to change these setting
     int     JSDeadZone          = 5;                            //Joystick deadzone it is a percentage 0 to 100.
-    short   TSDeadZone[]        = {5,7,5};                        //Throttle deadzone for S Curve it is a percentage from 0 to 100.
+    short   TSDeadZone[]        = {5,10,10};                      //Throttle deadzone for S Curve it is a percentage from 0 to 100.
     int     FPDeadZone          = 10;                           //Foot pedal deadzone it is a percentage 0 to 100.
     
 //          Flap switch          Up,Mid,Dwn

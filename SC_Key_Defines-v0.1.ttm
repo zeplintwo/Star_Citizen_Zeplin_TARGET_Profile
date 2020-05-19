@@ -59,6 +59,13 @@ define GimbalStab       DX5                 //DX5 button to toggle gimbal stabiz
 define GimbalMode       DX6                 //DX6 button to cycle though gimbal modes
 
 //---------------------------------------------------------------------------
+//----------------------View/Camera Controls---------------------------------
+define RearLook         DX7                 //DX7 rear view 
+define LeftLook         DX8                 //DX8 left view
+define RightLook        DX9                 //DX9 right view
+define DownLook         DX10                //DX10 down view
+
+//---------------------------------------------------------------------------
 //----------------------General Controls-------------------------------------
 define Mobiglas         USB[0x3a]           //f1 for mobiglas interface
 define SystemMap        USB[0x3b]           //f2 for System Map
@@ -66,7 +73,8 @@ define LandingGear      USB[0x11]           //n Landing gear
 define Lights           USB[0x17]           //t lights
 define MineMode         USB[0x10]           //m Mining Mode toggle
 define ScanMode         USB[0x2B]           //TAB for ship scanning
-define ScanFire         MOUSE_RIGHT         //Left mouse click for scanning.
+define ScanFire         MOUSE_RIGHT         //Right mouse click for scanning.
+define MineFracHarv     MOUSE_RIGHT         //Right mouse click for Mining mode toggles of Fracture and harvest
 define ExitSeat         USB[0x1C]           //y for exiting current seat
 
 //---------------------------------------------------------------------------
