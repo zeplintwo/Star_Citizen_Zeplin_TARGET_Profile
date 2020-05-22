@@ -1,0 +1,17 @@
+// Part of Star_Citizen_Zeplin_Profile#.# keybinds packages
+//---------------------------------------------------------------------------
+//                      Macro Scripts
+//---------------------------------------------------------------------------
+int mForBurst(){// short throttle bumps for nudging the craft forward
+    ActKey(KEYON+ThrottleFor);
+    DeferCall(ThrTap,&ActKey,ThrottleFor);
+    DeferCall(ThrTap+1,&ActKey,KEYON+Brakes);
+    DeferCall(ThrTap*2+2,&ActKey,Brakes);
+}
+ 
+int mAftBurst(){// short throttle bumps for nudging the craft rearward
+    ActKey(KEYON+ThrottleAft);
+    DeferCall(ThrTap,&ActKey,ThrottleAft);
+    DeferCall(ThrTap+1,&ActKey,KEYON+Brakes);
+    DeferCall(ThrTap*2+2,&ActKey,Brakes);
+}

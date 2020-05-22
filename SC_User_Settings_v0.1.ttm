@@ -7,6 +7,8 @@
 // Changeing from defaults are SHOULD NOT cause unintended results
 //---------------------------------------------------------------------------
 // Ingame axis toggle follow for several controls
+
+    int     TFRPedalUsage       = 1;        //Default 1     // Set TFRPedalUsage to 1 to enable using the thrustmaster FRP Rudder. Set to 0 to disable the functionality.
    
     int     FootFollowJoy       = 1;        //Default 1     // set FootFollowJoy to 1 for to follow Joystick profile or 0 to stay on initial JSProfile
     
@@ -14,32 +16,70 @@
     
     int     SliderFollow        = 0;        //Default 0     // set SliderFollow to 1 to follow the same maping changes to its axis from flap controls leave 0 to have one to one control
     
-    int     FootPedal           = 1;        //Default 1     // set FootPedal to 1 for usage of the yaw axis to control ingame yaw motion. Set 0 to have the dual 'throttle' pedals to control yaw independently
+    int     SlewToYaw           = 1;        //Default 1     // set SlewToYaw to 1 to control yaw on the throttle slew stick in the x plane (left/right). Set to 0 to disable this functionality.
+    
+    int     SlewFollowJoy       = 1;        //Default 1     // set SlewFollowJoy to 1 for the throttle SC slew stick to follow the joystick. Set to 0 to disable this functionality.
+    
+    int     Verbose             = 1;        //Default 1     // set Verbose to 1 to see all prints in  command window. Set to 0 to disable this functionality.
 
 //---------------------------------------------------------------------------
-//----------------------Joystick and Throttle Curve Arrays-------------------
+//---------------------------Throttle Switchable Maps------------------------
 
-    //It is not recomened to change these setting
+define  FlapThrUp           SetForwardThrOnly
+define  FlapThrMid          SetDualProg
+define  FlapThrDown         SetDualPerc
+
+define  APPathUp            SetFlat
+define  APAltHdgMid         SetProg
+define  APAltDown           SetPrec
+
+//---------------------------------------------------------------------------
+//----------------------Axis Control Curve Arrays----------------------------
+
+//---------------------------------------------------------------------------
+//  IT IS NOT RECOMENDED TO CHANGE SETTINGS BELOW THIS POINT
+//---------------------------------------------------------------------------
+
+//-----Joystick-----
     int     JSDeadZone          = 5;                            //Joystick deadzone it is a percentage 0 to 100.
-    short   TSDeadZone[]        = {5,10,10};                      //Throttle deadzone for S Curve it is a percentage from 0 to 100.
-    int     FPDeadZone          = 10;                           //Foot pedal deadzone it is a percentage 0 to 100.
-    
-//          Flap switch          Up,Mid,Dwn
+//     AutoPilot switch          Up,Mid,Dwn
     short   JSCurve[]           = {0,4,10};                     //{Flat,Progresive,Precision} Joystick S Curve must be between -32 and 32 as a whole number
     short   JSZoom[]            = {0,0,-2};                     //{Flat,Progresive,Precision} Joystick S Curve it is a percentage 0 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
-    short   TSCurve[]           = {0,5,7};                      //{Flat,Progresive,Precision} Throttle S Curve array for for throttle between -32 and 32 integer
-    short   TSZoom[]            = {0,0,-2};                     //{Flat,Progresive,Precision} Throttle S Curve array for for throttle zoom integer -100 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
+
+//-----TFR Foot Pedal-----
+    int     FPDeadZone          = 10;                           //Foot pedal deadzone it is a percentage 0 to 100.
+//     AutoPilot switch          Up,Mid,Dwn
     short   FPCurve[]           = {0,10,10};                    //{Flat,Progresive,Precision}Foot pedal S Curve modes must be between -32 and 32 as a whole number
     short   FPZoom[]            = {0,0,-3};                     //{Flat,Progresive,Precision}Foot pedal S Curve modes it is a percentage 0 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
     
+//-----SC Stalk-----
+    int     SCDeadZone          = 10;                           //SC stalk throttle deadzone it is a percentage 0 to 100.
+//     AutoPilot switch          Up,Mid,Dwn
+    short   SCCurve[]           = {0,0,0};                      //{Flat,Progresive,Precision}SC stalk S Curve modes must be between -32 and 32 as a whole number
+    short   SCZoom[]            = {-2,-4,-6};                   //{Flat,Progresive,Precision}SC stalk S Curve modes it is a percentage 0 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
+    
+//-----Throttle-----        
+//          Flap switch          Up,Mid,Dwn
+    short   TSDeadZone[]        = {5,7,7};                      //Throttle deadzone for S Curve it is a percentage from 0 to 100.
+    short   TSCurve[]           = {0,5,7};                      //{Flat,Progresive,Precision} Throttle S Curve array for for throttle between -32 and 32 integer
+    short   TSZoom[]            = {0,0,-2};                     //{Flat,Progresive,Precision} Throttle S Curve array for for throttle zoom integer -100 to 100. Negative increase accuracy at expence of range. Postive reduce accurace but compresses map to reduce throw on device axis.
     short   TJAct[]             = {50,0};                       //{Flat,Null} Array for throttle J curve
     short   TJOut[]             = {50,0};                       //{Flat,Null} Array for throttle J curve
+    
+//---------------------------------------------------------------------------
+//---------------------------Delay Timers for TEMPO Binds--------------------
+    int     DShort              = 300;                          //Normal lenght delay sugested 300ms (default is 300)
+    int     DLong               = 500;                          //Long lenght delay sugested 500ms (default is 500)
 
 //---------------------------------------------------------------------------
+//---------------------------'Default' Delays for Script---------------------
+    int     PulseLength         = 25;                           //Length of a pulse command in ms (default is 25)
+    int     DelayLength         = 33;                           //Length of a normal d() delay in ms (default is 33)
 
-    int Gear                = 1;                            //assumes ship landed
-    int DLSet               = 0;                            //Door and lock desion signal
-    
+//---------------------------------------------------------------------------
+//---------------------------Vars for Function Script---------------------
+    int DLSet               = 0;                                //Door and lock desion signal
+    int ThrTap              = 250;                              //pulse lenght for thrustter for and aft macros
     int SetForwardThrOnly,SetForeNonLinThr,SetThrPrecison,SetDualFlat,SetDualProg,SetDualPerc,SetFlat,SetProg,SetPrec;//Throttle declaration modes
     
 //---------------------------------------------------------------------------

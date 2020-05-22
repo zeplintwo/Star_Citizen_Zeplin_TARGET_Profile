@@ -8,7 +8,7 @@ int setExclusion(){//following lines turn off other thrustmaster devices
 	Configure(&LMFD, MODE_EXCLUDED);
 	Configure(&RMFD, MODE_EXCLUDED);
 	Configure(&TWCSThrottle, MODE_EXCLUDED);
-    Configure(&T16000, MODE_EXCLUDED);	
+    Configure(&T16000, MODE_EXCLUDED);
 }
 
 int initLEDClear(){//reset of LEDs to allow proper states to be displayed
@@ -17,43 +17,30 @@ int initLEDClear(){//reset of LEDs to allow proper states to be displayed
     ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED3));
     ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED4));
     ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED5));
+    if (Verbose) printf("LED's Reset \xa");
 }
 
 int initShieldManagment(){//Shield Reinforcing
-    if (Joystick[S3]){
-        if (Joystick[H4U]) {ActKey(KEYON+PULSE+ShieldTop);}
-        if (Joystick[H4D]) {ActKey(KEYON+PULSE+ShieldBottom);}
-        if (Joystick[H4P]) {ActKey(KEYON+PULSE+ShieldReset);}
-    }
-    else {
-        if (Joystick[H4U]) {ActKey(KEYON+PULSE+ShieldFore);}
-        if (Joystick[H4D]) {ActKey(KEYON+PULSE+ShieldAft);}
-        if (Joystick[H4L]) {ActKey(KEYON+PULSE+ShieldLeft);}
-        if (Joystick[H4R]) {ActKey(KEYON+PULSE+ShieldRight);}
-        if (Joystick[H4P]) {ActKey(KEYON+PULSE+ShieldReset);}
-    }
+   MapKeyIO(&Joystick,H4U,PULSE+ShieldTop,PULSE+ShieldFore);
+   MapKeyIO(&Joystick,H4D,PULSE+ShieldBottom,PULSE+ShieldAft);
+   MapKey(&Joystick,H4P,PULSE+ShieldReset);
+   MapKeyIO(&Joystick,H4L,0,PULSE+ShieldLeft);
+   MapKeyIO(&Joystick,H4R,0,PULSE+ShieldRight);
+   if (Verbose) printf("Shield Managment Loaded \xa");
 }
 
-int initScanViewHAT(){
-    if (Joystick[S3]){
-        if (Joystick[H1U] & Joystick[S3]){ActKey(KEYON+PULSE+DownLook);}
-        if (Joystick[H1D] & Joystick[S3]){ActKey(KEYON+PULSE+RearLook);}
-        if (Joystick[H1L] & Joystick[S3]){ActKey(KEYON+PULSE+LeftLook);}
-        if (Joystick[H1R] & Joystick[S3]){ActKey(KEYON+PULSE+RightLook);}
-    }
-    else {
-        if (Joystick[H1U] & !Joystick[S3]){ActKey(TEMPO(ScanMode,ScanFire,DShort));}
-        if (Joystick[H1D] & !Joystick[S3]){ActKey(KEYON+PULSE+ExitSeat);}
-        if (Joystick[H1L] & !Joystick[S3]){ActKey(PULSE+GimbalStab);}
-        if (Joystick[H1R] & !Joystick[S3]){ActKey(PULSE+GimbalMode);}
-    }
+int initScanViewHAT(){//view,scan,gimbal  Hat 1 functions
+    MapKeyIO(&Joystick,H1U,DownLook,ScanMode);
+    MapKeyIO(&Joystick,H1D,ExitSeat,RearLook);
+    MapKeyIO(&Joystick,H1L,LeftLook,GimbalStab);
+    MapKeyIO(&Joystick,H1R,RightLook,GimbalMode);
 }
 
 int initDoorManagment(){//Full Open/Close and Lock Operation
-    if (DLSet==1 & !Joystick[S3]){ActKey(KEYON+PULSE+CloseAllDr);}
-    if (DLSet==2 & !Joystick[S3]){ActKey(KEYON+PULSE+OpenAllDr);}
-    if (DLSet==1 & Joystick[S3]){ActKey(KEYON+PULSE+LockAllDr);}
-    if (DLSet==2 & Joystick[S3]){ActKey(KEYON+PULSE+UnlockAllDr);}
+    if (DLSet==1 & !Joystick[S4]){ActKey(KEYON+PULSE+CloseAllDr);if (Verbose) printf("All Doors Closed \xa");}
+    if (DLSet==2 & !Joystick[S4]){ActKey(KEYON+PULSE+OpenAllDr);if (Verbose) printf("All Doors Open \xa");}
+    if (DLSet==1 & Joystick[S4]){ActKey(KEYON+PULSE+LockAllDr);if (Verbose) printf("All Doors Locked \xa");}
+    if (DLSet==2 & Joystick[S4]){ActKey(KEYON+PULSE+UnlockAllDr);if (Verbose) printf("All Doors Unlocked \xa");}
 }
 
 //---------------------------------------------------------------------------
@@ -64,7 +51,7 @@ int extComms(){
     ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED2));
     ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED3));
     MapKey(&Throttle, MSP, Ext_Voice);
-    if(DebugOut) printf("External Comms Enabled \xa");
+    if(Verbose) printf("External Comms Enabled \xa");
 }
 
 int intProxComms(){
@@ -72,7 +59,7 @@ int intProxComms(){
     ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT+LED2));
     ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED3));
     MapKey(&Throttle, MSP, Int_VoiceProx);
-    if(DebugOut) printf("Internal Proximity Comms Enabled \xa");
+    if(Verbose) printf("Internal Proximity Comms Enabled \xa");
 }
 
 int intComms(){
@@ -80,7 +67,7 @@ int intComms(){
     ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT-LED2));
     ActKey(KEYON+PULSE+LED(&Throttle, LED_ONOFF,LED_CURRENT+LED3));
     MapKey(&Throttle, MSP, Int_Voice);
-    if(DebugOut) printf("Internal Comms Enabled \xa");
+    if(Verbose) printf("Internal Comms Enabled \xa");
 }
 
 //---------------------------------------------------------------------------
@@ -102,7 +89,7 @@ int LeftCustCurve(int a,int b){//wraping for custom curves to follow the Right T
     if (LeftThrFollow){TrimDXAxis(DX_SLIDER_AXIS, SET(b));LCCurveThrSet(a);}
     else {TrimDXAxis(DX_SLIDER_AXIS, SET(b));LSCurveThrSet(0);}
 }
-    
+
 int LeftFollowCurve(int a,int b,int c){//wraping for S andJ  curves to follow the Right Throttle curves
     if (c==1){
         if (LeftThrFollow){TrimDXAxis(DX_SLIDER_AXIS, SET(b));LSCurveThrSet(a);}
@@ -157,14 +144,32 @@ int SetThrottle() { // Prevents Throttle jumping around on mode changes
 }
 
 //---------------------------------------------------------------------------
-//                      Joystick maping controls
+//                      SC Stalk controls
+//---------------------------------------------------------------------------
+int setSlewYawControl(int a){SetSCurve(&Throttle, SCX, 0, SCDeadZone, 0, SCCurve[a], SCZoom[a]);}//slew to yaw on throttle toggle statment
+
+int initSlewControl(int a){
+    if (SlewToYaw){
+        if (SlewFollowJoy){setSlewYawControl(a);}
+        else {setSlewYawControl(1);}
+    }
+}
+
+//---------------------------------------------------------------------------
+//                      Rudder maping controls
 //---------------------------------------------------------------------------
 int setFootAxisSCurve(int a){SetSCurve(&TFRPRudder,TRUDDER,0,FPDeadZone,0,FPCurve[a],FPZoom[a]);}//TRP Footpedal Curves
 
 int FootSCurve(int a){//wraping for custom curves to follow the Right Throttle curves
-    if (FootFollowJoy){setFootAxisSCurve(a);}
-    else {setFootAxisSCurve(0);}
+    if (TFRPedalUsage){
+        if (FootFollowJoy){setFootAxisSCurve(a);}
+        else {setFootAxisSCurve(0);}
+    }
 }
+
+//---------------------------------------------------------------------------
+//                      Joystick maping controls
+//---------------------------------------------------------------------------
 
 int JoyAxisCurveSet(int a){ //Warthog Joystick Curves
     SetSCurve(&Joystick, JOYX, 0,JSDeadZone,0,(JSCurve[a]),JSZoom[a]);

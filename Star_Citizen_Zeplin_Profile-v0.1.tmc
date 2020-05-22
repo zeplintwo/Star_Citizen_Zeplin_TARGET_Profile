@@ -23,6 +23,7 @@ include "SC_Key_Defines-v0.1.ttm"               //Key defines for SC to TARGET s
 include "SC_Hardware-v0.1.ttm"                  //Hardware setup for the script
 include "SC_User_Settings_v0.1.ttm"             //User editable setting for the script
 include "SC_Functions-v0.1.ttm"                 //Function for the script
+include "SC_Macros-v0.1.ttm"                    //Macros to create diffrent funcanality
 
 int AxisCurveProg,AxisCurvePrecision;           //custom throttle list declares
 
@@ -42,19 +43,19 @@ int main()
     //Main code calls
     initLEDClear();
     initJoyMapAxis();
-    initFootMapAxis();
     initThrottleMapAxis();
+    initFootMapAxis();
     setJoystickCurves();
     setThrottleCurves();
     warthogJoyBinds();
 	warthogThrottleBinds();	
+	initShieldManagment();
+	initScanViewHAT();
 }
 
 //event handler
 int EventHandle(int type, alias o, int x)
 {
     DefaultMapping(&o, x);
-	//add event handling code here
-    initShieldManagment();
-    initScanViewHAT();    
+	//add event handling code here 
 }

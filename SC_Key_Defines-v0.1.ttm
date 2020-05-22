@@ -16,6 +16,8 @@ define ThrustUp         USB[0x2c]           //space accend, thrust upward
 define ThrustDown       USB[0xE0]           //L_CTRL Strafe DOWN
 define ThrustLeft       USB[0x04]           //a strafe left
 define ThrustRight      USB[0x07]           //d strafe right
+define ThrottleFor      USB[0x1A]           //w throttle forward
+define ThrottleAft      USB[0x16]           //s throttle reverse
 define Brakes           USB[0x1b]           //x brakes, stoping thrust, aero brakes, retro thrust
 define Afterburner      DX4                 //DX4 button to start Afterburnner
 define VTOL             USB[0x0D]           //j VTOL mode toggle
@@ -72,24 +74,24 @@ define SystemMap        USB[0x3b]           //f2 for System Map
 define LandingGear      USB[0x11]           //n Landing gear
 define Lights           USB[0x17]           //t lights
 define MineMode         USB[0x10]           //m Mining Mode toggle
-define ScanMode         USB[0x2B]           //TAB for ship scanning
-define ScanFire         MOUSE_RIGHT         //Right mouse click for scanning.
-define MineFracHarv     MOUSE_RIGHT         //Right mouse click for Mining mode toggles of Fracture and harvest
+define ScanMode         DX13                //Dx13 for ship scanning
+define ScanFire         DX11                //DX11 for scanning.
+define MineFracHarv     DX12                //DX12 for Mining mode toggles of Fracture and harvest
 define ExitSeat         USB[0x1C]           //y for exiting current seat
 
 //---------------------------------------------------------------------------
 //----------------------Door and Lock Controls-------------------------------
 define CloseAllDr       USB[0x0E]           //k close all doors keybind changed to only close
-define OpenAllDr        L_CTL+'k'            //L_Ctrl+k close all doors keybind changed to only close
+define OpenAllDr        L_CTL+'k'           //L_Ctrl+k close all doors keybind changed to only close
 define LockAllDr        USB[0x0F]           //l lock all doors keybind has changed to only lock
-define UnlockAllDr      L_CTL+'l'            //L_Ctrl+l lock all doors keybind has changed to only lock
+define UnlockAllDr      L_CTL+'l'           //L_Ctrl+l lock all doors keybind has changed to only lock
 
 //---------------------------------------------------------------------------
 //----------------------Voice and Head Tracking------------------------------
 define HeadTrack        USB[0x54]           //Numb / Toggle for head tracking
 define HeadCal          USB[0x55]           //Numb * Calibrate head tracking
 define Int_Voice        USB[0x57]           //Numb'+' to use local game voice comms
-define Int_VoiceProx    L_ALT+'+'           //L_Alt+numb'+' to use local game voice comms
+define Int_VoiceProx    L_ALT+USB[0x57]     //L_Alt+numb'+' to use local game voice comms
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // REFERENCE: USB KEY DEFINITIONS //																															//
