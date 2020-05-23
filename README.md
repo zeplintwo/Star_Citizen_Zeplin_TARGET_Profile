@@ -57,5 +57,6 @@ Target software found in download link above under software as of this writing o
    6. Launch ‘TARGET GUI’ and ‘Run Configuration’ on ' Star_Citizen_Zeplin_Profile-v#.#.#.tmc '. 
       - You can also run the configuration from the Script Editor.
    7. Copy the ‘layout_Zeplin_SC_Binds_exported.xml’ to your (install drive)\Program Files\Roberts Space Industries\StarCitizen\LIVE\USER\Controls\Mappings. [For more on importing see this link for SC support site.][https://support.robertsspaceindustries.com/hc/en-us/articles/360000183328]
-      
-   8. Launch save game and enjoy. 
+   8. Copy the ‘SCZeplin.xml’ to the TrackIR profile folder at %AppData%\NaturalPoint\TrackIR 5\Profiles. [For more on TrackIR setting here is there 5.3 Manual][https://www.naturalpoint.com/trackir/documents/TrackIR-5.3-Manual.pdf]   
+   9. Launch save game and enjoy. 
+ 
