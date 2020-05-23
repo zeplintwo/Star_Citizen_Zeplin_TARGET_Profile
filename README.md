@@ -24,18 +24,19 @@ There are several things that you may want to change from the way I fly. Most of
 
 ## Features of script:
 
-Switchable throttle maps ingame 3 presets controlled by ‘flaps’ 6 different profiles in script. 
-Switchable joystick maps ingame 3 presets controlled by ‘Autopilot’ 
-Full lock/unlock & open/close from one button depending on ‘shift’ pinky button.
-Flight assist pulse or lock.
-Flight brakes pulse or lock.
-Chaff/flare toggle with same button launch
-Missile lock and fire from same button. 
-Full six axis thrusting. For and Aft are more of a bump then actual ‘thruster’ like Elite has.
-Three position comms External application, Local Ingame, Global Ingame. Selectble from throttle pinky switch.
-Full power management from joystick
-Full shield control from joystick
-Major target selection direct from joystick 
+-Switchable throttle maps ingame 3 presets controlled by ‘flaps’ 6 different profiles in script. 
+-Switchable joystick maps ingame 3 presets controlled by ‘Autopilot’ 
+-Full lock/unlock & open/close from one button depending on ‘shift’ pinky button.
+-Flight assist pulse or lock.
+-Flight brakes pulse or lock.
+-Chaff/flare toggle with same button launch
+-Missile lock and fire from same button. 
+-Full six axis thrusting. For and Aft are more of a bump then actual ‘thruster’ like Elite has.
+-Three position comms External application, Local Ingame, Global Ingame. Selectble from throttle pinky switch.
+-Full power management from joystick
+-Full shield control from joystick
+-Major target selection direct from joystick
+-and more...
 
 ---
 ## Thrustmaster links to TARGET Software
