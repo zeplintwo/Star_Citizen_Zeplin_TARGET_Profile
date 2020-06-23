@@ -24,6 +24,7 @@ define VTOL             USB[0x0D]           //j VTOL mode toggle
 define QJump            USB[0x05]           //b for Quantium Travel
 define Decouple         USB[0x19]           //v to toggle coupleing sim of resistance in space or flight assistance
 define ThrottleReverse  '|'                 //| 'pipe' to toggle reverseing of one direction axis
+define RollYawSwap      DX14                //DX14 to swap Yaw and Roll Axis in SC
 
 //---------------------------------------------------------------------------
 //----------------------Shield Controls--------------------------------------

@@ -113,7 +113,7 @@ int warthogJoyBinds(){//Keybindings for the Warthog Joysick key assignments.
     MapKey(&Joystick,H3R,PULSE+PShields);
     
     SetShiftButton(&Joystick,S4);//  ****************Reserved shift function
-    //MapKey(&Joystick,S3,0);
+    MapKey(&Joystick,S3,RollYawSwap);
     if(Verbose) printf("Joystick Keybinds Loaded\x0a ");
 }
     
